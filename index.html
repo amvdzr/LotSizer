@@ -5,7 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lot Size Calculator</title>
     <style>
-        /* Previous CSS remains unchanged */
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #374151;
+            --primary-color: #3b82f6;
+            --container-bg: rgba(255, 255, 255, 0.95);
+            --input-border: #e5e7eb;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1f2937;
+            --text-color: #f3f4f6;
+            --primary-color: #60a5fa;
+            --container-bg: rgba(31, 41, 55, 0.95);
+            --input-border: #4b5563;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -20,15 +35,35 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            color: var(--text-color);
+            transition: background 0.3s ease;
         }
 
         .container {
-            background: rgba(255, 255, 255, 0.95);
+            background: var(--container-bg);
             padding: 25px;
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             width: 100%;
             max-width: 500px;
+            transition: all 0.3s ease;
+        }
+
+        /* Add theme toggle button styles */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--container-bg);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
         .logo-container {
@@ -43,7 +78,7 @@
         }
 
         h1 {
-            color: #3b82f6;
+            color: var(--primary-color);
             text-align: center;
             margin-bottom: 25px;
             font-size: 1.8rem;
@@ -56,22 +91,19 @@
         label {
             display: block;
             margin-bottom: 8px;
-            color: #374151;
+            color: var(--text-color);
             font-weight: 500;
         }
 
         input {
             width: 100%;
             padding: 12px;
-            border: 2px solid #e5e7eb;
+            border: 2px solid var(--input-border);
             border-radius: 10px;
             font-size: 1rem;
             transition: border-color 0.3s ease;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: #3b82f6;
+            background: var(--container-bg);
+            color: var(--text-color);
         }
 
         button {
@@ -86,16 +118,11 @@
             transition: transform 0.2s ease;
         }
 
-        button:active {
-            transform: scale(0.98);
-        }
-
-        /* New risk amount style */
         #riskAmount {
             margin-top: 25px;
             text-align: center;
             font-size: 1.5rem;
-            color: #3b82f6;
+            color: var(--primary-color);
             font-weight: bold;
             display: none;
         }
@@ -121,10 +148,10 @@
         .footer {
             text-align: center;
             margin-top: 25px;
-            color: #6b7280;
+            color: var(--text-color);
             font-size: 0.9rem;
             padding-top: 15px;
-            border-top: 1px solid #e5e7eb;
+            border-top: 1px solid var(--input-border);
         }
 
         @keyframes blink {
@@ -153,6 +180,9 @@
     </style>
 </head>
 <body>
+    <!-- Theme Toggle Button -->
+    <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+    
     <div class="container">
         <div class="logo-container">
             <img src="https://skillcentric.org/wp-content/uploads/2024/05/Skill-Center-1.png" 
@@ -189,6 +219,29 @@
     </div>
 
     <script>
+        // Theme toggle functionality
+        function toggleTheme() {
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            
+            if(currentTheme === 'dark') {
+                body.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // Check for saved theme preference
+        window.addEventListener('load', () => {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            if(savedTheme === 'dark') {
+                document.body.setAttribute('data-theme', 'dark');
+            }
+        });
+
+        // Calculate function remains same
         function calculateLotSize() {
             const accountSize = parseFloat(document.getElementById('accountSize').value);
             const riskPercent = parseFloat(document.getElementById('riskPercent').value);
